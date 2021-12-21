@@ -4,6 +4,8 @@ TARGET=/boot
 BOOTDIR=/boot
 UCODE=$BOOTDIR/intel-ucode.img
 EFISTUB=/usr/lib/systemd/boot/efi/linuxx64.efi.stub
+SECURE_BOOT=1
+SECURE_BOOT_KEY=/etc/efi-keys
 
 echo "Updating EFI kernels..."
 
@@ -39,4 +41,8 @@ for k in $BOOTDIR/vmlinuz*; do
 	    --add-section .linux="$k" --change-section-vma .linux=0x40000 \
 	    --add-section .initrd="$INITRDFILE" --change-section-vma .initrd=0x3000000 \
 	    "$EFISTUB" "$TARGET/$NAME.efi"
+
+	if [ $SECURE_BOOT -ne 0 ]; then
+		sbsign --key $SECURE_BOOT_KEY/DB.key --cert $SECURE_BOOT_KEY/DB.crt --output "$TARGET/$NAME.efi" "$TARGET/$NAME.efi"
+	fi
 done
