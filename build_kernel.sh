@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET=/boot
+TARGET=/efi/EFI/Arch
 BOOTDIR=/boot
 UCODE=$BOOTDIR/intel-ucode.img
 EFISTUB=/usr/lib/systemd/boot/efi/linuxx64.efi.stub
